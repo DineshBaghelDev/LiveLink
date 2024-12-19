@@ -54,9 +54,9 @@ io.on("connection", (socket) => {
     });
 
     // Handle message sending to room
-    socket.on("message", (nickname, message, roomCode) => {
-        ChatsData[roomCode].push({ nickname, message })
-        io.to(roomCode).emit("message", nickname, message);
+    socket.on("message", (nickname, message, roomCode, senderID) => {
+        ChatsData[roomCode].push({ nickname, message, senderID })
+        io.to(roomCode).emit("message", nickname, message, senderID);
     });
 
     // Disconnect handler (optional)
@@ -65,6 +65,10 @@ io.on("connection", (socket) => {
         if (roomCode) {
             io.to(roomCode).emit("left-room", nickname);
             delete ClientRooms[socket.id];
+        }
+        if (ChatsData[roomCode].length==0){
+            delete ChatsData[roomCode]
+            Rooms.delete(roomCode)
         }
     });
     
