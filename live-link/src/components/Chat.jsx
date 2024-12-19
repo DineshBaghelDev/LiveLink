@@ -39,10 +39,10 @@ const Chat = () => {
         });
 
         // Listen for messages
-        socket.on("message", (senderNickname, newMessage) => {
+        socket.on("message", (senderNickname, newMessage, senderID) => {
             setChats((prevChats) => [
                 ...prevChats,
-                { nickname: senderNickname, message: newMessage },
+                { nickname: senderNickname, message: newMessage ,senderID},
             ]);
 
         });
@@ -68,7 +68,7 @@ const Chat = () => {
     const sendMessage = (e) => {
         e.preventDefault()
         if (message.trim()) {
-            socket.emit("message", nickname, message, roomCode);
+            socket.emit("message", nickname, message, roomCode, socket.id);
             setMessage(''); // Clear the input field
         }
     };
@@ -83,8 +83,8 @@ const Chat = () => {
                     {chats.map((chat, index) => (
                         <div key={index} className='text-light text-gray-600'>
                             {chat.nickname == "System" && (<><strong className='text-bold text-green-500'>{chat.nickname}:</strong> {chat.message}</>)}
-                            {(chat.nickname != nickname && chat.nickname != "System") && (<div className="w-fit sm:max-w-[60%] p-3 mx-5 my-1 rounded-2xl rounded-tl-none bg-[#d7398369]"><strong className='text-bold text-red-400'>{chat.nickname}:</strong> {chat.message}</div>)}
-                            {chat.nickname == nickname && (<div className="w-fit sm:max-w-[60%] p-3 my-1 mx-5 rounded-2xl flex-col-reverse rounded-tr-none bg-[#7339d769] float-end clear-end"><strong className='text-bold text-indigo-400'>{chat.nickname}:</strong> {chat.message}</div>)}
+                            {(chat.senderID != socket.id && chat.nickname != "System") && (<div className="w-fit sm:max-w-[60%] p-3 mx-5 my-1 rounded-2xl rounded-tl-none bg-[#d7398369]"><strong className='text-bold text-red-400'>{chat.nickname}:</strong> {chat.message}</div>)}
+                            {chat.senderID == socket.id && (<div className="w-fit sm:max-w-[60%] p-3 my-1 mx-5 rounded-2xl flex-col-reverse rounded-tr-none bg-[#7339d769] float-end clear-end"><strong className='text-bold text-indigo-400'>{chat.nickname}:</strong> {chat.message}</div>)}
                         </div>
                     ))}
                 </div>
