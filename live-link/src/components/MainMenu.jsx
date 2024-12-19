@@ -52,7 +52,7 @@ const MainMenu = () => {
               type="text"
               name="nickname"
               id="nickname"
-              placeholder="Enter Your Nickname"
+              placeholder="Enter Nickname"
               autoComplete='off'
               autoFocus={true}
               value={nickname}
